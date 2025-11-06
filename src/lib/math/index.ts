@@ -17,3 +17,19 @@ export function gcd(val1: number, val2: number): number {
 
   return gcd;
 }
+
+export function isPrime(value: number): boolean {
+  value = parseInt(`${value}`);
+
+  if (isNaN(value) || value < 2) {
+    return false;
+  }
+
+  for (let i = 2; i <= Math.sqrt(value); i++) {
+    if (value % i == 0) {
+      return false;
+    }
+  }
+
+  return true;
+}
