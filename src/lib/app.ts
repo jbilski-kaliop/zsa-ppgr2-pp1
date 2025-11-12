@@ -1,16 +1,25 @@
-import { bindGcdActionToButtonAndInputs } from "@/lib/actions/gcd";
 import { bindGetPrimesInRangeActionToButtonAndInputs, bindIsPrimeActionToButtonAndInput } from "@/lib/actions/prime";
+import { GCD_BUTTON_ID, GET_PRIMES_ID, IS_PRIME_1_ID, IS_PRIME_2_ID, VAL_1_ID, VAL_2_ID } from "@/config";
+import GcdAction from "@/lib/actions/GcdAction";
+import Action from "@/lib/actions/Action";
+import { bindActionCallbackToButton } from "@/lib/dom";
 
-const VAL_1_ID = "value1";
-const VAL_2_ID = "value2";
-const GCD_BUTTON_ID = "calcGcd";
-const IS_PRIME_1_ID = "isPrime1";
-const IS_PRIME_2_ID = "isPrime2";
-const GET_PRIMES_ID = "getPrimesInRange";
+export default class App {
+  run() {
+    this.bindActionToButton(GCD_BUTTON_ID, () => new GcdAction(VAL_1_ID, VAL_2_ID));
 
-export default function runApp(): void {
-  bindGcdActionToButtonAndInputs(GCD_BUTTON_ID, VAL_1_ID, VAL_2_ID);
-  bindIsPrimeActionToButtonAndInput(IS_PRIME_1_ID, VAL_1_ID);
-  bindIsPrimeActionToButtonAndInput(IS_PRIME_2_ID, VAL_2_ID);
-  bindGetPrimesInRangeActionToButtonAndInputs(GET_PRIMES_ID, VAL_1_ID, VAL_2_ID);
+    // TODO: reimplement remaining actions
+    bindIsPrimeActionToButtonAndInput(IS_PRIME_1_ID, VAL_1_ID);
+    bindIsPrimeActionToButtonAndInput(IS_PRIME_2_ID, VAL_2_ID);
+    bindGetPrimesInRangeActionToButtonAndInputs(GET_PRIMES_ID, VAL_1_ID, VAL_2_ID);
+  }
+
+  private bindActionToButton(btnId: string, callback: () => Action): void {
+    bindActionCallbackToButton(btnId, () => {
+      const action = callback();
+      if (action instanceof Action) {
+        action.execute();
+      }
+    });
+  }
 }
